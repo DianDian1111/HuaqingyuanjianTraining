@@ -1,8 +1,7 @@
 # HuaqingyuanjianTraining
 ## Day 1
-### 练习git基本操作，同时将Pycharm与GitHub连接起来，
-![1.
-png](../Screenshot/Day1/1.png)
+###练习git基本操作，同时将Pycharm与GitHub连接起来，
+![1. png](../Screenshot/Day1/1.png)
 ![2.png](../Screenshot/Day1/2.png)
 ![3.png](../Screenshot/Day1/3.png)
 ![4.png](../Screenshot/Day1/4.png)
@@ -41,3 +40,17 @@ tensorboard --logdir= 自己的绝对路径
 #### 池化层
 代码里面是最大池化，还有平均池化
 [pooling_layer.py](2022/Day2/Fundamentals_of_Deep_Learning/pooling_layer.py)
+
+
+## Day3
+### Activation function
+[Activation_function.py](2022/Day3/Activation_function.py)
+### maganet
+[moganet.py](2022/Day3/moganet.py)
+### 训练自己的数据集
+#### 数据预处理
+![3_1.png](../Screenshot/Day3/3_1.png)
+生成train文件和val文件
+注意：需要备份一份数据集
+然后在prepare.py中把train和val文件识别等得到train.txt和val.txt
+![3_2.png](../Screenshot/Day3/3_2.png)

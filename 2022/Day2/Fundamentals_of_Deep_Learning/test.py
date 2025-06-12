@@ -7,7 +7,7 @@ from torchvision import transforms
 image_path = "../Image/img.png"
 image = Image.open(image_path)
 print(image)
-# png格式是四个通道，除了RGB三个通道外，还有一个透明通道,调用image = image.convert('RGB')
+# png格式是四个通道，除了RGB三个通道外，还有一个透明通道,调用image = images.convert('RGB')
 image = image.convert('RGB')
 
 # 改变成tensor格式
@@ -23,7 +23,7 @@ model = torch.load("D:\shixi\models\chen_9.pth", weights_only=False).to("cuda")
 # print(model)
 
 image = torch.reshape(image, (1, 3, 32, 32)).to("cuda")
-# image = image.cuda()
+# images = images.cuda()
 
 # 将模型转换为测试模型
 model.eval()
