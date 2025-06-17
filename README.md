@@ -1,17 +1,17 @@
 # HuaqingyuanjianTraining
 ## Day 1
 ###练习git基本操作，同时将Pycharm与GitHub连接起来，
-![1. png](../Screenshot/Day1/1.png)
-![2.png](../Screenshot/Day1/2.png)
-![3.png](../Screenshot/Day1/3.png)
-![4.png](../Screenshot/Day1/4.png)
-![5.png](../Screenshot/Day1/5.png)
-![6.png](../Screenshot/Day1/6.png)
-![7.png](../Screenshot/Day1/7.png)
-![8.png](../Screenshot/Day1/8.png)
-![9.png](../Screenshot/Day1/9.png)
-![10.png](../Screenshot/Day1/10.png)
-![11.png](../Screenshot/Day1/11.png)
+![1. png](2022/Screenshot/Day1/1.png)
+![2.png](2022/Screenshot/Day1/2.png)
+![3.png](2022/Screenshot/Day1/3.png)
+![4.png](2022/Screenshot/Day1/4.png)
+![5.png](2022/Screenshot/Day1/5.png)
+![6.png](2022/Screenshot/Day1/6.png)
+![7.png](2022/Screenshot/Day1/7.png)
+![8.png](2022/Screenshot/Day1/8.png)
+![9.png](2022/Screenshot/Day1/9.png)
+![10.png](2022/Screenshot/Day1/10.png)
+![11.png](2022/Screenshot/Day1/11.png)
 ### 使用遥感图像处理工具（如rasterio、Pillow等）对多波段TIFF遥感数据进行处理，生成可视化的真彩色图像。
 1.理解遥感图像中不同波段（如B02、B03、B04）与颜色（蓝、绿、红）之间的对应关系；
 2.实现RGB图像的合成与归一化处理，确保输出图像在 0-255 的显示范围内；
@@ -21,6 +21,7 @@
 2.使用numpy对红绿蓝段进行归一化处理
 3.使用PIL.Image.fromarray()将结果保存为jpeg格式以及用matplotlib显示图像
 注：遥感图像波段值常常不在 0~255 范围内，必须归一化才能正确显示。
+![output_rgb.jpg](2022/Screenshot/Day1/output_rgb.jpg)
 
 ## Day2
 ### 深度学习基础
@@ -35,8 +36,8 @@
 #### tensorboard使用
 使用tensorboard命令打开
 tensorboard --logdir= 自己的绝对路径
-![2_2.png](../Screenshot/Day2/2_2.png)
-![2_3.png](../Screenshot/Day2/2_3.png)
+![2_2.png](2022/Screenshot/Day2/2_2.png)
+![2_3.png](2022/Screenshot/Day2/2_3.png)
 #### 池化层
 代码里面是最大池化，还有平均池化
 [pooling_layer.py](2022/Day2/Fundamentals_of_Deep_Learning/pooling_layer.py)
@@ -49,11 +50,11 @@ tensorboard --logdir= 自己的绝对路径
 [moganet.py](2022/Day3/moganet.py)
 ### 训练自己的数据集
 #### 数据预处理
-![3_1.png](../Screenshot/Day3/3_1.png)
+![3_1.png](2022/Screenshot/Day3/3_1.png)
 生成train文件和val文件
 注意：需要备份一份数据集
 然后在prepare.py中把train和val文件识别等得到train.txt和val.txt
-![3_2.png](../Screenshot/Day3/3_2.png)
+![3_2.png](2022/Screenshot/Day3/3_2.png)
 
 
 ## Day4
@@ -84,7 +85,7 @@ qkv = Linear(d → 3·h·d_head)        # (b, n, 3·h·d_head)
 q, k, v = chunk(...).reshape(...)   # (b, h, n, d_head)
 ```
 3. 注意力权重
-![4_1.png](../Screenshot/Day4/4_1.png)得到形状 (b, h, n, n)。
+![4_1.png](2022/Screenshot/Day4/4_1.png)得到形状 (b, h, n, n)。
 4. 加权求和并重组
 ```python
 out = (attn @ v)                    # (b, h, n, d_head)
@@ -143,7 +144,7 @@ logits = v(time_series)               # 输出 (4, 1000)
 ```
 ### yolo训练自己的数据集
 #### 学习重要参数设置
-![4_2.png](../Screenshot/Day4/4_2.png)
+![4_2.png](2022/Screenshot/Day4/4_2.png)
 #### 训练预加载数据集
 新建train.py以后，选择yolo模型的训练文件
 #### 1. `train.py` 逐行解析
@@ -185,11 +186,11 @@ recall召回率：预测的框个数和我们标签框个数的比值
 iou交并比：预测的框和我们真实的框 交集和并集的面积之比
 map50：交并比在0.5的所有框的精度的平均值，用来评价模型的预测的综合能力
 map50-95：是用来评估模型精准预测的能力
-![4_3.png](../Screenshot/Day4/4_3.png)
+![4_3.png](2022/Screenshot/Day4/4_3.png)
 
 ## Day5
 ### 交通标志训练
-![5_1.png](../Screenshot/Day5/5_1.png)
+![5_1.png](2022/Screenshot/Day5/5_1.png)
 ranfficSignDetection.v9.yaml和我们的coco数据集的格式有区别
 ```python
 lst = ['Children', 'Entering city', 'Exiting city', 'Falling rocks', 'Fog', 'Give way', 'Ice or snow', 'Intersection with priority', 'Intersection without priority', 'Level crossing -multiple tracks-', 'Level crossing 160m', 'Level crossing 240m', 'Level crossing 80m', 'Level crossing with barriers ahead', 'Level crossing without barriers ahead', 'Level crossing', 'Loose surface material', 'Low-flying aircraft', 'No heavy goods vehicles', 'No left turn', 'No overtaking by heavy goods vehicles', 'No right turn', 'No vehicles carrying dangerous goods', 'No vehicles', 'One-way street', 'Opening bridge', 'Parking zone', 'Pedestrian crossing', 'Pedestrians', 'Priority over oncoming traffic', 'Right curve', 'Road narrows', 'Roadworks', 'Series of curves', 'Slippery surface', 'Soft verges', 'Steep ascent', 'Steep descent', 'Traffic queues', 'Traffic signals', 'Trams', 'Tunnel', 'Two-way traffic', 'Unprotected quayside or riverbank', 'Wild animals', 'ahead only', 'ahead or right', 'bumpy road', 'crosswalk', 'do_not_enter', 'end ofSpeed limit 70', 'general caution', 'keep right', 'left curve', 'no admittance', 'no overtakes', 'no stopping', 'no_parking', 'priority road', 'road work', 'roundabout', 'slippery road', 'speed limit -100-', 'speed limit -110-', 'speed limit -120-', 'speed limit -130-', 'speed limit -20-', 'speed limit -30-', 'speed limit -40-', 'speed limit -5-', 'speed limit -50-', 'speed limit -60-', 'speed limit -70-', 'speed limit -80-', 'speed limit -90-', 'stop', 'traffic light- green', 'traffic light- red', 'trafic light- red', 'turn left orright only', 'turn right only', 'yellow', 'yield']
@@ -273,7 +274,7 @@ write_file_paths_to_txt(r'D:\ultralytics-main\datasets_cups\images\\val', 'val.t
 ```
 ## Day6
 ### 绘制yolo算法流程图
-![6_1.png](../Screenshot/Day6/6_1.png)
+![6_1.png](2022/Screenshot/Day6/6_1.png)
 yolov8.yaml文件作用：
 * 定义模型的层次结构（Conv、C2f、SPPF 等）
 * 配置不同规模模型的 深度（depth）、宽度（width） 和 最大通道数
