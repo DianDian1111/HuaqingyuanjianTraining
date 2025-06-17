@@ -21,6 +21,7 @@
 2.使用numpy对红绿蓝段进行归一化处理
 3.使用PIL.Image.fromarray()将结果保存为jpeg格式以及用matplotlib显示图像
 注：遥感图像波段值常常不在 0~255 范围内，必须归一化才能正确显示。
+![output_rgb.jpg](2022/Screenshot/Day1/output_rgb.jpg)
 
 ## Day2
 ### 深度学习基础
