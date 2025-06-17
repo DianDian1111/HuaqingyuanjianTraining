@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
 from dataset import ImageTxtDataset
-from model import *
+from model import chen
 
 # 准备数据集
 
