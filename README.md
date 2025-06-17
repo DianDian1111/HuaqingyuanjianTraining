@@ -1,6 +1,6 @@
 # HuaqingyuanjianTraining
 ## Day 1
-###练习git基本操作，同时将Pycharm与GitHub连接起来，
+### 练习git基本操作，同时将Pycharm与GitHub连接起来，
 ![1. png](2022/Screenshot/Day1/1.png)
 ![2.png](2022/Screenshot/Day1/2.png)
 ![3.png](2022/Screenshot/Day1/3.png)
@@ -23,29 +23,183 @@
 注：遥感图像波段值常常不在 0~255 范围内，必须归一化才能正确显示。
 ![output_rgb.jpg](2022/Screenshot/Day1/output_rgb.jpg)
 
-## Day2
-### 深度学习基础
-欠拟合：训练训练数据集表现不好，验证表现不好
-过拟合：训练数据训练过程表现得很好，在我得验证过程表现不好
+## Day2 深度学习与卷积神经网络（CNN）基础
+### 1.深度学习基础
+#### 1.1 深度学习训练流程
+完整的训练流程包括：
+1. **数据准备**：加载、预处理、划分训练与测试集；
+2. **模型定义**：构建神经网络架构；
+3. **损失函数**：衡量预测值与真实值差距；
+4. **优化器**：更新权重以最小化损失；
+5. **训练循环**（epoch）：反复迭代训练集；
+6. **验证与测试**：评估模型泛化能力。
+#### 1.2 欠拟合 vs 过拟合
+| 类型     | 特征                               | 表现                                     |
+|----------|------------------------------------|------------------------------------------|
+| 欠拟合   | 模型能力不足                       | 训练集和验证集准确率都较低               |
+| 过拟合   | 模型对训练数据记忆过强             | 训练准确率高，验证集准确率低             |
+### 2.卷积神经网络（CNN）
+CNN 是专门处理图像等网格数据的神经网络结构，广泛应用于图像识别、语音处理等任务。
+#### 2.1 卷积层
+**作用**：提取局部特征（如边缘、纹理等）  
+**参数**：
+- `in_channels`: 输入通道数（RGB图像为3）
+- `out_channels`: 卷积核个数（输出通道）
+- `kernel_size`: 卷积核大小（如3×3）
+- `stride`: 步长
+- `padding`: 边缘填充
+**本质**：滑动窗口加权求和。
+---
+#### 2.2 激活函数
+**常用函数**：
+- `ReLU(x) = max(0, x)`：最常用，收敛快，计算简单；
+- `Leaky ReLU`：缓解 ReLU 的“神经元死亡”；
+- `Sigmoid / Tanh`：可能导致梯度消失，深层网络中使用较少。
+---
+#### 2.3 池化层
+**作用**：降维、减少计算、防止过拟合  
+**类型**：
+- **最大池化**：取窗口最大值
+- **平均池化**：取窗口平均值
+**注意**：池化不改变通道数，只缩小宽高。
+---
+代码里面是最大池化，还有平均池化
+[pooling_layer.py](2022/Day2/Fundamentals_of_Deep_Learning/pooling_layer.py)
+代码示例
+```python
+from torch.nn import MaxPool2d
+
+class Chen(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.maxpool_1 = MaxPool2d(kernel_size=3, ceil_mode=False)
+
+    def forward(self, input):
+        return self.maxpool_1(input)
+
+chen = Chen()
+writer = SummaryWriter("maxpool_logs")
+
+for data in dataloader:
+    imgs, _ = data
+    writer.add_images("input", imgs, step)
+    output = chen(imgs)
+    writer.add_images("output", output, step)
+    step += 1
+writer.close()
+```
+#### 2.4 批归一化（Batch Normalization）
+**作用**：加速训练，缓解梯度消失  
+**原理**：对每一层输入进行标准化（均值为0，方差为1）
+---
+#### 2.5 全连接层（Fully Connected Layer）
+**作用**：将高维特征映射到最终分类结果  
+**位置**：通常在卷积与池化层之后
+---
+#### 2.6 Dropout 层
+**作用**：随机“丢弃”部分神经元，减少过拟合  
+**原理**：每轮训练屏蔽一部分神经元输出
+---
 卷积过程[nn_conv.py](2022/Day2/Fundamentals_of_Deep_Learning/nn_conv.py)
 #### 积运算的输出计算
 5*5的输入数据 3*3的卷积核 步长1 填充1，输出5x5 
 输出尺寸=⌊ N+2P−K /S ⌋+1
 #### 图片卷积
 [nn_conv2d.py](2022/Day2/Fundamentals_of_Deep_Learning/nn_conv2d.py)
-#### tensorboard使用
+#### 2.7 卷积操作示例（PyTorch）
+```python
+import torch
+import torch.nn.functional as F
+
+input = torch.tensor([[1,2,0,3,1],
+                      [0,1,2,3,1],
+                      [1,2,1,0,0],
+                      [5,2,3,1,1],
+                      [2,1,0,1,1]], dtype=torch.float32)
+kernel = torch.tensor([[1,2,1],
+                       [0,1,0],
+                       [2,1,0]], dtype=torch.float32)
+
+input = input.reshape(1, 1, 5, 5)
+kernel = kernel.reshape(1, 1, 3, 3)
+
+output = F.conv2d(input, kernel, stride=1)
+output2 = F.conv2d(input, kernel, stride=2)
+output3 = F.conv2d(input, kernel, stride=1, padding=1)
+```
+#### 2.8 卷CIFAR10 卷积网络示例
+```python
+import torch
+import torchvision
+from torch import nn
+from torch.utils.data import DataLoader
+from torch.utils.tensorboard import SummaryWriter
+
+dataset = torchvision.datasets.CIFAR10(root="./dataset_chen", train=False,
+                                       transform=torchvision.transforms.ToTensor())
+
+dataloader = DataLoader(dataset, batch_size=64)
+
+class CHEN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 6, 3)
+
+    def forward(self, x):
+        return self.conv1(x)
+
+chen = CHEN()
+writer = SummaryWriter("conv_logs")
+
+step = 0
+for data in dataloader:
+    imgs, _ = data
+    output = chen(imgs)
+    writer.add_images("input", imgs, step)
+    output = output.reshape(-1, 3, 30, 30)
+    writer.add_images("output", output, step)
+    step += 1
+```
+### tensorboard使用
 使用tensorboard命令打开
 tensorboard --logdir= 自己的绝对路径
 ![2_2.png](2022/Screenshot/Day2/2_2.png)
 ![2_3.png](2022/Screenshot/Day2/2_3.png)
-#### 池化层
-代码里面是最大池化，还有平均池化
-[pooling_layer.py](2022/Day2/Fundamentals_of_Deep_Learning/pooling_layer.py)
 
 
 ## Day3
-### Activation function
+### 1. 激活函数详解
 [Activation_function.py](2022/Day3/Activation_function.py)
+#### 1.1 激活函数的作用
+激活函数用于神经网络中每个神经元的输出变换，具有以下作用：
+- **引入非线性特性**：使神经网络能够逼近非线性映射；
+- **影响学习能力**：决定每个神经元是否激活，控制信息传递；
+- **提升表达能力**：增强神经网络对复杂数据分布的建模能力。
+---
+#### 1.2 常见激活函数
+| 激活函数 | 特性描述 |
+|----------|----------|
+| **Sigmoid** | 输出范围 (0, 1)，适合概率输出。<br> 缺点：梯度消失、非零中心、计算复杂。 |
+| **Tanh** | 输出范围 (-1, 1)，中心对称，表达能力强于 Sigmoid。<br> 缺点：梯度仍可能消失。 |
+| **ReLU** | 计算快，收敛速度快，适用于多数 CNN 网络。<br> 缺点：存在“死亡神经元”问题。 |
+| **Leaky ReLU** | 引入负区间小斜率 α，解决神经元失活问题。 |
+| **PReLU** | 类似 Leaky ReLU，α 为可学习参数，更灵活。 |
+| **ELU** | 负半轴更平滑，输出均值接近0，有助于收敛。<br> 但计算复杂度略高。 |
+| **Swish** | 自适应激活，结合 Sigmoid 和 ReLU 优点。<br> 适用于高效网络结构（如 EfficientNet）。 |
+| **Softmax** | 将向量归一化为概率分布，常用于多分类任务输出层。 |
+---
+#### 1.3 激活函数对比表
+| 激活函数   | 输出范围     | 计算复杂度 | 梯度消失 | 是否需参数 | 应用场景 |
+|------------|--------------|-------------|-----------|--------------|-----------|
+| Sigmoid    | (0, 1)        | 高          | 有        | 否           | 二分类输出层 |
+| Tanh       | (-1, 1)       | 高          | 有        | 否           | RNN / 零中心需求 |
+| ReLU       | [0, ∞)        | 低          | 有        | 否           | 默认激活函数 / CNN |
+| Leaky ReLU | (-∞, ∞)       | 低          | 无        | 是 (α)       | 深层网络 |
+| PReLU      | (-∞, ∞)       | 低          | 无        | 是 (α 可学习) | CV任务 |
+| ELU        | (-∞, ∞)       | 中          | 无        | 是 (α)       | 稳定收敛网络 |
+| Swish      | (-∞, ∞)       | 高          | 无        | 是 (β)       | EfficientNet 等 |
+| Softmax    | (0, 1) 且和为1 | 高          | 无        | 否           | 多分类输出层 |
+---
 ### maganet
 [moganet.py](2022/Day3/moganet.py)
 ### 训练自己的数据集
